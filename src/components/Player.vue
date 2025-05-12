@@ -121,7 +121,7 @@ export default defineComponent({
   .player-container {
     flex-direction: column;
     padding: 5px;
-    width: 100%;
+    width: 80%;
   }
   .canvas-container {
     width: 100%;
