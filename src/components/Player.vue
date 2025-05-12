@@ -2,7 +2,7 @@
   <div class="player-container">
     <!-- 用 p5.js 顯示 Canvas -->
     <div ref="canvasContainer" class="canvas-container"></div>
-    <div class="text-container">Money Money Money</div>
+    <div class="text-container">Orange</div>
     <!-- 音樂播放器，放在頁面底部 -->
     <div class="audio-visualizer">
       <av-line
@@ -34,39 +34,35 @@ export default defineComponent({
   setup(props) {
     const canvasContainer = ref(null);
 
-
-
-
     let particles: Particle[] = [];
     let audioContext: AudioContext;
-let analyser: AnalyserNode;
-let dataArray: Uint8Array;
-const animationStarted = ref(false);
-
+    let analyser: AnalyserNode;
+    let dataArray: Uint8Array;
+    const animationStarted = ref(false);
 
     // 用 p5.js 初始化 Canvas
     onMounted(() => {
-        const audioEl = document.querySelector('audio') as HTMLAudioElement;
-  if (!audioEl) return;
+      const audioEl = document.querySelector('audio') as HTMLAudioElement;
+      if (!audioEl) return;
 
-  audioContext = new AudioContext();
-  const source = audioContext.createMediaElementSource(audioEl);
-  analyser = audioContext.createAnalyser();
-  source.connect(analyser);
-  analyser.connect(audioContext.destination);
+      audioContext = new AudioContext();
+      const source = audioContext.createMediaElementSource(audioEl);
+      analyser = audioContext.createAnalyser();
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
 
-  analyser.fftSize = 256;
-  const bufferLength = analyser.frequencyBinCount;
-  dataArray = new Uint8Array(bufferLength);
+      analyser.fftSize = 256;
+      const bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
 
-  audioEl.addEventListener('play', () => {
-    audioContext.resume();
-    animationStarted.value = true;
-  });
+      audioEl.addEventListener('play', () => {
+        audioContext.resume();
+        animationStarted.value = true;
+      });
 
-  audioEl.addEventListener('pause', () => {
-    animationStarted.value = false;
-  });
+      audioEl.addEventListener('pause', () => {
+        animationStarted.value = false;
+      });
       new p5((sketch) => {
         sketch.setup = () => {
           sketch.createCanvas(400, 400).parent(canvasContainer.value);
@@ -75,15 +71,15 @@ const animationStarted = ref(false);
           }
         };
         sketch.draw = () => {
-            if (!animationStarted.value) return;
+          if (!animationStarted.value) return;
 
-analyser.getByteFrequencyData(dataArray);
-const avgVolume =
-  dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+          analyser.getByteFrequencyData(dataArray);
+          const avgVolume =
+            dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
           sketch.background(25, 25, 25);
           for (let i = 0; i < particles.length; i++) {
-            particles[i].update(sketch,avgVolume);
+            particles[i].update(sketch, avgVolume);
             particles[i].show(sketch);
             if (particles[i].isOutOfBounds(sketch)) {
               particles[i] = new Particle(sketch);
@@ -113,6 +109,21 @@ const avgVolume =
   background-color: #f6e050;
   background: linear-gradient(to bottom, #f6e050, #847575); /* 漸層背景 */
 }
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .player-container {
+    padding: 10px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .player-container {
+    flex-direction: column;
+    padding: 5px;
+    width: 100%;
+  }
+}
 .canvas-container {
   width: 100%;
   max-width: 600px;
@@ -122,7 +133,6 @@ const avgVolume =
   width: 100%;
   display: contents;
   padding: 30px;
-
   margin-top: 50px;
 }
 .text-container {
