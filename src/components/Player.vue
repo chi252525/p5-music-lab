@@ -121,7 +121,11 @@ export default defineComponent({
   .player-container {
     flex-direction: column;
     padding: 5px;
-    width: 100%;
+    width: 70%;
+  }
+  .canvas-container {
+    width: 80%;
+    height: 200px; /* 調整高度以適應小屏幕 */
   }
 }
 .canvas-container {
